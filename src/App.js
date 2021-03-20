@@ -73,7 +73,7 @@ function App() {
     }
   }
   const handleSubmit = (e) => {
-    console.log(user.email, user.password);
+    // console.log(user.email, user.password);
     if (newUser && user.email && user.password) {
       firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
         .then(res => {
@@ -88,7 +88,7 @@ function App() {
           newUserInfo.error = error.message;
           newUserInfo.success = false;
           setUser(newUserInfo)
-          
+          updateUserName(user.name)
         });
     }
     if (!newUser && user.email && user.password) {
@@ -104,10 +104,25 @@ function App() {
           newUserInfo.error = error.message;
           newUserInfo.success = false;
           setUser(newUserInfo)
+          console.log('sign in user info', user.res);
         });
       
     }
     e.preventDefault();
+  }
+
+  const updateUserName = name => {
+    const  user = firebase.auth().currentUser;
+
+    user.updateProfile({
+      displayName:{name}
+    })
+      .then(function () {
+      console.log('user name updated successfully');
+    })
+      .catch(function (error) {
+      console.log(error);
+    });
   }
 
   return (
@@ -132,6 +147,7 @@ function App() {
       <h1>Our Own Authentication</h1>
       <input type="checkbox" onChange={() => setNewUser(!newUser)} name="newUser" id="" />
       <label htmlFor="newUser">New User Sign Up</label>
+
       {/* <p>Name: {user.name}</p>
       <p>Email: {user.email}</p>
       <p>Password: {user.password}</p> */}
@@ -143,7 +159,7 @@ function App() {
         <br />
         <input onBlur={handleBlur} type="password" name="password" placeholder="Enter Your Password" id="" required />
         <br />
-        <input type="submit" value="submit" />
+        <input type="submit" value={newUser ? 'Sign up' : 'Sign in'} />
       </form>
       <p style={{ color: 'red' }}> {user.error} </p>
 
