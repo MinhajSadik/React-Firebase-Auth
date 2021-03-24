@@ -8,7 +8,6 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
-
 function App() {
   const [newUser, setNewUser] = useState(false);
   const [user, setUser] = useState({
